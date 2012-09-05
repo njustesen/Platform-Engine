@@ -2,11 +2,15 @@
 #include <string>
 #include "SDL_image.h"
 #include "MapController.h"
+#include "Level.h"
 
 //The attributes of the screen
-const extern int SCREEN_WIDTH = 1280;
-const extern int SCREEN_HEIGHT = 800;
+const extern int SCREEN_WIDTH = 800;
+const extern int SCREEN_HEIGHT = 600;
 const extern int SCREEN_BPP = 32;
+const extern int LEVEL_HEIGHT = 20;
+const extern int LEVEL_WIDTH = 320;
+
 SDL_Surface *screen;
 MapController mapController;
 
@@ -76,14 +80,26 @@ int update(){
 	return 1;
 }
 
+void drawLevel(){
+	for(int y = 0; y < LEVEL_HEIGHT; y++){
+		for(int x = 0; x < LEVEL_WIDTH; x++){
+			int val = mapController.getLevel()->at(x,y);
+			if (val > 0 && val < 10){
+				applySurface(x*32,y*32,mapController.getTileImage(val),screen);
+			}
+		}
+	}
+}
+
 int draw(){
-	//Load the level sprites
+	//Load the background
 	Sprite* bg = mapController.getBackground();
-    vector<Sprite> tiles = *mapController.getTiles();
-    SDL_Surface* surf = bg->getImage();
 
 	//Apply the background to the screen
-	applySurface( 0, 0, surf, screen );
+	applySurface( 0, 0, bg->getImage(), screen);
+
+	// Apply the level to the screen
+	drawLevel();
 
 	//Update the screen
     if( SDL_Flip( screen ) == -1 ){

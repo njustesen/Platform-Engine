@@ -10,16 +10,19 @@ using namespace std;
 class MapController
 {
 private: 
-	Level level;
+	Level * level;
 	Sprite *background;
+	SDL_Surface* tileset[10]; 
 	int intFromChar(char c);
 	int charX;
 	int charY;
+	void loadTileset();
 public:
 	int getCharX();
 	int getCharY();
 	Level *getLevel();
 	SDL_Surface *getTileImage(int tile);
+	SDL_Surface *loadTileImage(int tile);
 	Sprite *getBackground();
 	void loadLevel(string levelName);
 	MapController(void);

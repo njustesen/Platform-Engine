@@ -21,6 +21,14 @@ MapController::MapController(void)
 MapController::MapController(string levelName)
 {
 	loadLevel(levelName);
+	loadTileset();
+}
+
+void MapController::loadTileset()
+{
+	for (int i = 0; i < 9; i++){
+		tileset[i] = loadTileImage(i);
+	}
 }
 
 int MapController::intFromChar(char c){
@@ -44,7 +52,7 @@ void MapController::loadLevel(string levelName){
 	background = new Sprite(0,0,0,0, loadImage("../Assets/Images/background.png"));
 
 	// Load level
-	level.clear();
+	level = new Level();
 	string line;
 	ifstream myfile ("../Levels/level1.lv");
 	if (myfile.is_open()){
@@ -58,9 +66,9 @@ void MapController::loadLevel(string levelName){
 				if (line.at(x) == 'c'){
 					charX = xx;
 					charY = y;
-					level.insert(xx, y, 0);
+					level->insert(xx, y, 0);
 				} else if (line.at(x) != 9){ // Ignore tabs
-					level.insert(xx, y, intFromChar(line.at(x)));
+					level->insert(xx, y, intFromChar(line.at(x)));
 				}
 			}
 			y++;
@@ -74,7 +82,7 @@ Sprite *MapController::getBackground(){
 }
 
 Level *MapController::getLevel(){
-	return &level;
+	return level;
 }
 
 int MapController::getCharX(){
@@ -85,7 +93,7 @@ int MapController::getCharY(){
 	return charY;
 }
 
-SDL_Surface *MapController::getTileImage(int tile){
+SDL_Surface *MapController::loadTileImage(int tile){
 	string img = "../Assets/Images/";
 
 	stringstream out;
@@ -95,6 +103,10 @@ SDL_Surface *MapController::getTileImage(int tile){
 	img.append(str).append(".png");
 	
 	return loadImage(img);
+}
+
+SDL_Surface *MapController::getTileImage(int tile){
+	return tileset[tile];
 }
 
 MapController::~MapController(void)

@@ -2,19 +2,37 @@
 #include <string>
 #include "SDL_image.h"
 #include "MapController.h"
+#include "InputController.h"
+#include "PhysicsController.h"
 #include "Level.h"
 #include "Character.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
 
 //The attributes of the screen
 const extern int SCREEN_WIDTH = 800;
 const extern int SCREEN_HEIGHT = 600;
 const extern int SCREEN_BPP = 32;
+const extern int TILE_SIZE = 32;
+const extern int VISION = 25;
+const extern int CHAR_SPEED = 20;
 const extern int LEVEL_HEIGHT = 20;
 const extern int LEVEL_WIDTH = 320;
+const extern int FPS = 60;
 
 SDL_Surface * screen;
 MapController * mapController;
 Character * character;
+InputController * inputController;
+PhysicsController * physicsController;
+
+string intToString(int i){
+	stringstream out;
+	out << i;
+	return out.str();
+}
 
 SDL_Surface *loadImage( std::string filename ) {
     //The image that's loaded
@@ -74,22 +92,48 @@ int initGame(){
 
 	// Setup controllers
 	mapController =  new MapController("level1");
-	
-	character = new Character(mapController->getCharX(), mapController->getCharY());
+
+	// Create character
+	character = new Character(mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 32, 32, CHAR_SPEED);
+
+	inputController = new InputController();
+	physicsController = new PhysicsController(character, mapController->getLevel());	
 	
 	return 1;
 }
 
-int update(){
+void moveCharacter(int ticks){
+	int movement = character->getSpeed()*ticks/100;
+	if (inputController->right() && physicsController->characterOnGround()){
+		character->setXMovement(movement);
+	}
+	if (inputController->left() && physicsController->characterOnGround()){
+		character->setXMovement(movement*-1);
+	}
+	if (inputController->jump() && physicsController->characterOnGround()){
+		character->setYMovement(-6.5f);
+	}
+	if (physicsController->characterOnGround()){
+		int i = 0;
+	}
+}
+
+int update(int ticks){
+	moveCharacter(ticks);
+	physicsController->gravity(ticks);
+	physicsController->move();
 	return 1;
 }
 
 void drawLevel(){
+	int xFrom = max(0, (character->getX()/TILE_SIZE)-VISION);
+	int xTo = min(LEVEL_WIDTH, (character->getX()/TILE_SIZE)+VISION);
+
 	for(int y = 0; y < LEVEL_HEIGHT; y++){
-		for(int x = 0; x < LEVEL_WIDTH; x++){
+		for(int x = xFrom; x < xTo; x++){
 			int val = mapController->getLevel()->at(x,y);
 			if (val > 0 && val < 10){
-				applySurface(x*32,y*32,mapController->getTileImage(val),screen);
+				applySurface(x*TILE_SIZE,y*TILE_SIZE,mapController->getTileImage(val),screen);
 			}
 		}
 	}
@@ -98,7 +142,7 @@ void drawLevel(){
 void drawCharacter(){
 
 	//Apply the character to the screen
-	applySurface( character->getX()*32, character->getY()*32, character->getSprite()->getImage(), screen);
+	applySurface( character->getX()-TILE_SIZE/2, character->getY()-TILE_SIZE, character->getSprite()->getImage(), screen);
 
 }
 
@@ -130,16 +174,41 @@ int main( int argc, char* args[] ){
 		return -1;
 	}
 
-	while(1){
+	// Prepare timer and stuff
+	Uint32 oldTime;
+	oldTime = SDL_GetTicks();
+	SDL_Event sdlEvent;
+	bool quit = false;
+	Uint32 loopStarted;
+
+	// Game loop
+	while(!quit){
+		loopStarted = SDL_GetTicks();
+
+		// Poll events
+		while(SDL_PollEvent(&sdlEvent)) {
+			switch(sdlEvent.type){
+				case SDL_QUIT : quit = true; break;
+				case SDL_KEYDOWN : inputController->handleKeyEvent(&sdlEvent); break;
+				case SDL_KEYUP : inputController->handleKeyEvent(&sdlEvent); break;
+			}
+		}
 
 		// Update
-		if (update() == -1){
+		int newTime = SDL_GetTicks();
+		int TimeSinceLastFrame = newTime - oldTime;
+		oldTime = newTime;
+		if (update(TimeSinceLastFrame) == -1){
 			return -1;
 		}
 
 		// Draw
 		if (draw() == -1){
 			return -1;
+		}	
+
+		if ((SDL_GetTicks() - loopStarted) < 1000/FPS){
+			SDL_Delay((1000/FPS) - (SDL_GetTicks() - loopStarted));
 		}
 	}
 

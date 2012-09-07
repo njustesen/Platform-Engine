@@ -6,7 +6,7 @@
 class Sprite
 {
 private:
-	SDL_Surface img;
+	SDL_Surface * img;
 	int x;
 	int y;
 	int h;
@@ -17,9 +17,9 @@ public:
 	int getY();
 	int getHeight();
 	int getWidth();
-	SDL_Surface* getImage();
+	SDL_Surface * getImage();
 	Sprite(void);
-	Sprite(int xpos, int ypos, int height, int width, SDL_Surface image);
+	Sprite(int xpos, int ypos, int height, int width, SDL_Surface * image);
 	~Sprite(void);
 };
 

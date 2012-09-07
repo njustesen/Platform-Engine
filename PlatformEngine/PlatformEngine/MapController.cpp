@@ -7,13 +7,20 @@
 #include "SDL_image.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
 using namespace std;
 
 //The surfaces that will be used
 
 MapController::MapController(void)
 {
-	
+
+}
+
+MapController::MapController(string levelName)
+{
+	loadLevel(levelName);
 }
 
 int MapController::intFromChar(char c){
@@ -34,9 +41,7 @@ int MapController::intFromChar(char c){
 
 void MapController::loadLevel(string levelName){
 	// Load background
-	SDL_Surface surf = *loadImage("../Assets/Images/background.png");
-	Sprite bg = Sprite(0,0,0,0, surf);
-	background = bg;
+	background = new Sprite(0,0,0,0, loadImage("../Assets/Images/background.png"));
 
 	// Load level
 	level.clear();
@@ -47,38 +52,48 @@ void MapController::loadLevel(string levelName){
 		while (myfile.good()){
 			getline (myfile,line);
 			for (int x = 0; x < line.length(); x++){
+				// Remove tabs by dividing - ONLY WORKS FOR SINGLE CHAR TILES!
 				int xx = x/2;
-				if (line.at(x) != 9){
+				// If character found
+				if (line.at(x) == 'c'){
+					charX = xx;
+					charY = y;
+					level.insert(xx, y, 0);
+				} else if (line.at(x) != 9){ // Ignore tabs
 					level.insert(xx, y, intFromChar(line.at(x)));
 				}
 			}
 			y++;
 		}
 		myfile.close();	
-	} else cout << "Unable to open file"; 
+	} // ELSE Error 
 }
 
 Sprite *MapController::getBackground(){
-	return &background;
+	return background;
 }
 
 Level *MapController::getLevel(){
 	return &level;
 }
 
+int MapController::getCharX(){
+	return charX;
+}
+
+int MapController::getCharY(){
+	return charY;
+}
+
 SDL_Surface *MapController::getTileImage(int tile){
 	string img = "../Assets/Images/";
-	switch(tile){
-	case 1 : img.append("1.png"); break;
-	case 2 : img.append("2.png"); break;
-	case 3 : img.append("3.png"); break;
-	case 4 : img.append("4.png"); break;
-	case 5 : img.append("5.png"); break;
-	case 6 : img.append("6.png"); break;
-	case 7 : img.append("7.png"); break;
-	case 8 : img.append("8.png"); break;
-	case 9 : img.append("9.png"); break;
-	}
+
+	stringstream out;
+	out << tile;
+	string str = out.str();
+
+	img.append(str).append(".png");
+	
 	return loadImage(img);
 }
 

@@ -8,7 +8,7 @@ Sprite::Sprite(void)
 {
 }
 
-Sprite::Sprite(int xpos, int ypos, int height, int width, SDL_Surface image){
+Sprite::Sprite(int xpos, int ypos, int height, int width, SDL_Surface* image){
 	x = xpos;
 	y = ypos;
 	h = height;
@@ -17,7 +17,7 @@ Sprite::Sprite(int xpos, int ypos, int height, int width, SDL_Surface image){
 }
 
 SDL_Surface* Sprite::getImage(){
-	return &img;
+	return img;
 }
 
 

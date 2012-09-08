@@ -32,18 +32,26 @@ void PhysicsController::move(){
 	int newY = character->getY() + (int)(character->getYMovement());
 
 	// Can char move vertical down?
-	//if (character->getYMovement() != 0){
-		if (level->at(newX/TILE_SIZE, newY/TILE_SIZE) != 0){
-			// Move down to tile
-			int yTile = newY/TILE_SIZE;
-			character->setY(yTile*TILE_SIZE);
+	if (level->at(newX/TILE_SIZE, newY/TILE_SIZE) != 0){
+		// Move to tile
+		int yTile = newY/TILE_SIZE;
+		character->setY(yTile*TILE_SIZE);
+		character->setYMovement(0);
+		charOnGround = true;
+	} else {
+		charOnGround = false;
+		character->setY(newY);
+	}
+	
+	// Can char move vertical up?
+	if (level->at(newX/TILE_SIZE, (newY-character->getWidth())/TILE_SIZE) != 0){
+		// Move to tile
+		int yTile = (newY-character->getWidth())/TILE_SIZE;
+		character->setY(yTile*TILE_SIZE + TILE_SIZE*2);
+		if (character->getYMovement() < 0){
 			character->setYMovement(0);
-			charOnGround = true;
-		} else {
-			charOnGround = false;
-			character->setY(newY);
 		}
-	//}
+	}
 	
 	// Can char move right?
 	if (character->getXMovement() > 0){

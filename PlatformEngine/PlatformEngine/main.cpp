@@ -4,6 +4,7 @@
 #include "MapController.h"
 #include "InputController.h"
 #include "PhysicsController.h"
+#include "Camera.h"
 #include "Level.h"
 #include "Character.h"
 #include <iostream>
@@ -20,6 +21,7 @@ const extern int VISION = 25;
 const extern int CHAR_SPEED = 20;
 const extern int LEVEL_HEIGHT = 20;
 const extern int LEVEL_WIDTH = 320;
+const extern int CAMERA_DELAY = 400;
 const extern int FPS = 60;
 
 SDL_Surface * screen;
@@ -27,6 +29,7 @@ MapController * mapController;
 Character * character;
 InputController * inputController;
 PhysicsController * physicsController;
+Camera * camera;
 
 string intToString(int i){
 	stringstream out;
@@ -98,6 +101,7 @@ int initGame(){
 
 	inputController = new InputController();
 	physicsController = new PhysicsController(character, mapController->getLevel());	
+	camera = new Camera(character->getX(), character->getY());
 	
 	return 1;
 }
@@ -122,6 +126,7 @@ int update(int ticks){
 	moveCharacter(ticks);
 	physicsController->gravity(ticks);
 	physicsController->move();
+	camera->move(ticks, character);
 	return 1;
 }
 
@@ -129,11 +134,14 @@ void drawLevel(){
 	int xFrom = max(0, (character->getX()/TILE_SIZE)-VISION);
 	int xTo = min(LEVEL_WIDTH, (character->getX()/TILE_SIZE)+VISION);
 
+	int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
+
 	for(int y = 0; y < LEVEL_HEIGHT; y++){
 		for(int x = xFrom; x < xTo; x++){
 			int val = mapController->getLevel()->at(x,y);
 			if (val > 0 && val < 10){
-				applySurface(x*TILE_SIZE,y*TILE_SIZE,mapController->getTileImage(val),screen);
+				applySurface(x*TILE_SIZE - cameraOffsetX, y*TILE_SIZE - cameraOffsetY, mapController->getTileImage(val),screen);
 			}
 		}
 	}
@@ -141,8 +149,11 @@ void drawLevel(){
 
 void drawCharacter(){
 
+	int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
+
 	//Apply the character to the screen
-	applySurface( character->getX()-TILE_SIZE/2, character->getY()-TILE_SIZE, character->getSprite()->getImage(), screen);
+	applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getSprite()->getImage(), screen);
 
 }
 

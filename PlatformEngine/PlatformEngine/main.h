@@ -13,5 +13,6 @@ const extern int SCREEN_BPP;
 const extern int LEVEL_HEIGHT;
 const extern int LEVEL_WIDTH;
 const extern int TILE_SIZE;
+const extern int CAMERA_DELAY;
 
 SDL_Surface *loadImage(std::string filename);

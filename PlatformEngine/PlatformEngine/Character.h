@@ -6,8 +6,8 @@ class Character
 private: 
 	int x;
 	int y;
-	float xMovement;
-	float yMovement;
+	double xMovement;
+	double yMovement;
 	int width;
 	int height;
 	int speed;
@@ -18,10 +18,10 @@ public:
 	int getWidth();
 	int getHeight();
 	int getSpeed();
-	float getXMovement();
-	float getYMovement();
-	void setXMovement(float movement);
-	void setYMovement(float movement);
+	double getXMovement();
+	double getYMovement();
+	void setXMovement(double movement);
+	void setYMovement(double movement);
 	void setX(int xpos);
 	void setY(int ypos);
 	Sprite * getSprite();

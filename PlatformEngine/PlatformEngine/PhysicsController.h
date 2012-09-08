@@ -7,6 +7,7 @@ private:
 	Level * level;
 	Character * character;
 	bool charOnGround;
+	double round(double number);
 public:
 	void gravity(int ticks);
 	bool characterOnGround();

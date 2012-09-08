@@ -30,19 +30,19 @@ int Character::getY(){
 	return y;
 }
 
-float Character::getXMovement(){
+double Character::getXMovement(){
 	return xMovement;
 }
 
-float Character::getYMovement(){
+double Character::getYMovement(){
 	return yMovement;
 }
 
-void Character::setXMovement(float movement){
+void Character::setXMovement(double movement){
 	xMovement = movement;
 }
 
-void Character::setYMovement(float movement){
+void Character::setYMovement(double movement){
 	yMovement = movement;
 }
 

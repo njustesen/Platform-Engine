@@ -22,7 +22,6 @@ double round(double number)
 void PhysicsController::gravity(int ticks){
 	if (!charOnGround){
 		float yMove = character->getYMovement() + ((float)1000/ticks)/200;
-		//
 		character->setYMovement(yMove);
 	}
 }
@@ -33,7 +32,7 @@ void PhysicsController::move(){
 	int newY = character->getY() + (int)(character->getYMovement());
 
 	// Can char move vertical down?
-	if (character->getYMovement() != 0){
+	//if (character->getYMovement() != 0){
 		if (level->at(newX/TILE_SIZE, newY/TILE_SIZE) != 0){
 			// Move down to tile
 			int yTile = newY/TILE_SIZE;
@@ -44,7 +43,7 @@ void PhysicsController::move(){
 			charOnGround = false;
 			character->setY(newY);
 		}
-	}
+	//}
 	
 	// Can char move right?
 	if (character->getXMovement() > 0){

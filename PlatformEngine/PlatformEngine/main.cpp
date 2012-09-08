@@ -104,10 +104,10 @@ int initGame(){
 
 void moveCharacter(int ticks){
 	int movement = character->getSpeed()*ticks/100;
-	if (inputController->right() && physicsController->characterOnGround()){
+	if (inputController->right()){ // && physicsController->characterOnGround()
 		character->setXMovement(movement);
 	}
-	if (inputController->left() && physicsController->characterOnGround()){
+	if (inputController->left()){ // && physicsController->characterOnGround()
 		character->setXMovement(movement*-1);
 	}
 	if (inputController->jump() && physicsController->characterOnGround()){

@@ -7,6 +7,8 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Character.h"
+#include "Point2D.h"
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -23,6 +25,7 @@ const extern int LEVEL_HEIGHT = 20;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 400;
 const extern int FPS = 60;
+const extern int CHARACTER_JUMP_POWER = 7.5f;
 
 SDL_Surface * screen;
 MapController * mapController;
@@ -97,7 +100,25 @@ int initGame(){
 	mapController =  new MapController("level1");
 
 	// Create character
-	character = new Character(mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 32, 32, CHAR_SPEED);
+	vector<Point2D*> * points = new vector<Point2D*>();
+	points->push_back(new Point2D(0,0));
+	
+	points->push_back(new Point2D(15,-4));
+	points->push_back(new Point2D(15,-24));
+	points->push_back(new Point2D(15,-12));
+	points->push_back(new Point2D(15,-31));
+	points->push_back(new Point2D(0,-31));
+	points->push_back(new Point2D(-15,-24));
+	points->push_back(new Point2D(-15,-12));
+	points->push_back(new Point2D(-15,-31));
+	points->push_back(new Point2D(-15,-4));
+	
+
+	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
+								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
+								32, 32, 
+								CHAR_SPEED,
+								points);
 
 	inputController = new InputController();
 	physicsController = new PhysicsController(character, mapController->getLevel());	
@@ -107,6 +128,7 @@ int initGame(){
 }
 
 void moveCharacter(int ticks){
+	//int movement = min(10, character->getSpeed()*ticks/100);
 	int movement = character->getSpeed()*ticks/100;
 	if (inputController->right()){ // && physicsController->characterOnGround()
 		character->setXMovement(movement);
@@ -115,7 +137,7 @@ void moveCharacter(int ticks){
 		character->setXMovement(movement*-1);
 	}
 	if (inputController->jump() && physicsController->characterOnGround()){
-		character->setYMovement(-6.5f);
+		character->setYMovement(CHARACTER_JUMP_POWER*-1);
 	}
 	if (physicsController->characterOnGround()){
 		int i = 0;
@@ -123,6 +145,7 @@ void moveCharacter(int ticks){
 }
 
 int update(int ticks){
+	ticks = max(1, min(1000,ticks));
 	moveCharacter(ticks);
 	physicsController->gravity(ticks);
 	physicsController->move();

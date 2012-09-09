@@ -1,12 +1,15 @@
 #include "Character.h"
 #include "Sprite.h"
 #include "main.h"
+#include "Point2D.h"
+#include <vector>
+using namespace std;
 
 Character::Character(void)
 {
 }
 
-Character::Character(int xpos, int ypos, int hei, int wid, int spe)
+Character::Character(int xpos, int ypos, int hei, int wid, int spe, vector<Point2D*> * points)
 {
 	x = xpos;
 	y = ypos;
@@ -16,10 +19,15 @@ Character::Character(int xpos, int ypos, int hei, int wid, int spe)
 	yMovement = 0;
 	speed = spe;
 	sprite = new Sprite (x, y, 32, 32, loadImage("../Assets/Images/char.png"));
+	hitPoints = points;
 }
 
 Sprite * Character::getSprite(){
 	return sprite;
+}
+
+vector<Point2D*> * Character::getHitPoints(){
+	return hitPoints;
 }
 
 int Character::getX(){

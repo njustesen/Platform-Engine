@@ -14,16 +14,16 @@ Camera::Camera(int xFocus, int yFocus)
 
 void Camera::move(int ticks, Character * character){
 	if (character->getX() > x){
-		x += (character->getX() - x) / (CAMERA_DELAY/ticks);
+		x += (character->getX() - x) / max(1,(CAMERA_DELAY/ticks));
 	}
 	if (character->getX() < x){
-		x += (character->getX() - x) / (CAMERA_DELAY/ticks);
+		x += (character->getX() - x) / max(1,(CAMERA_DELAY/ticks));
 	}
 	if (character->getY() > y){
-		y += (character->getY() - y) / (CAMERA_DELAY/ticks);
+		y += (character->getY() - y) / max(1,(CAMERA_DELAY/ticks));
 	}
 	if (character->getY() < y){
-		y += (character->getY() - y) / (CAMERA_DELAY/ticks);
+		y += (character->getY() - y) / max(1,(CAMERA_DELAY/ticks));
 	}
 }
 

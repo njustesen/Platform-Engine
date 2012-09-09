@@ -71,6 +71,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicsController.cpp" />
+    <ClCompile Include="Point2D.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="MapController.cpp" />
   </ItemGroup>
@@ -81,6 +82,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="PhysicsController.h" />
+    <ClInclude Include="Point2D.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="MapController.h" />
   </ItemGroup>

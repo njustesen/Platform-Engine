@@ -1,4 +1,7 @@
 #include "Sprite.h"
+#include "Point2D.h"
+#include <vector>
+using namespace std;
 
 #pragma once
 class Character
@@ -12,6 +15,7 @@ private:
 	int height;
 	int speed;
 	Sprite * sprite;
+	vector<Point2D*> * hitPoints;
 public:
 	int getX();
 	int getY();
@@ -25,8 +29,9 @@ public:
 	void setX(int xpos);
 	void setY(int ypos);
 	Sprite * getSprite();
+	vector<Point2D*> * getHitPoints();
 	Character(void);
-	Character(int xpos, int ypos, int height, int width, int spe);
+	Character(int xpos, int ypos, int height, int width, int spe, vector<Point2D*> * points);
 	~Character(void);
 };
 

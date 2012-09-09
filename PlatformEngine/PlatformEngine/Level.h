@@ -2,7 +2,7 @@
 class Level
 {
 private:
-	int level[32][320];
+	int level[320][320];
 
 public:
 	Level(void);

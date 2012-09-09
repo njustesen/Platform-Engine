@@ -21,9 +21,9 @@ const extern int SCREEN_BPP = 32;
 const extern int TILE_SIZE = 32;
 const extern int VISION = 25;
 const extern int CHAR_SPEED = 20;
-const extern int LEVEL_HEIGHT = 20;
+const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
-const extern int CAMERA_DELAY = 400;
+const extern int CAMERA_DELAY = 300;
 const extern int FPS = 60;
 const extern int CHARACTER_JUMP_POWER = 7.5f;
 

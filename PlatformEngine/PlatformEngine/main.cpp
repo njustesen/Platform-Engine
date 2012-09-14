@@ -1,19 +1,46 @@
 #include "SDL.h"
 #include <string>
 #include "SDL_image.h"
+#include "MapController.h"
+#include "InputController.h"
+#include "PhysicsController.h"
+#include "Camera.h"
+#include "Level.h"
+#include "Character.h"
+#include "Point2D.h"
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
 
 //The attributes of the screen
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
-const int SCREEN_BPP = 32;
+const extern int SCREEN_WIDTH = 800;
+const extern int SCREEN_HEIGHT = 600;
+const extern int SCREEN_BPP = 32;
+const extern int TILE_SIZE = 32;
+const extern int VISION = 25;
+const extern int CHAR_SPEED = 20;
+const extern int LEVEL_HEIGHT = 320;
+const extern int LEVEL_WIDTH = 320;
+const extern int CAMERA_DELAY = 300;
+const extern int FPS = 60;
+const extern int CHARACTER_JUMP_POWER = 7.5f;
 
-//The surfaces that will be used
-SDL_Surface *message = NULL;
-SDL_Surface *background = NULL;
-SDL_Surface *screen = NULL;
+SDL_Surface * screen;
+MapController * mapController;
+Character * character;
+InputController * inputController;
+PhysicsController * physicsController;
+Camera * camera;
 
-SDL_Surface *load_image( std::string filename ) 
-{
+string intToString(int i){
+	stringstream out;
+	out << i;
+	return out.str();
+}
+
+SDL_Surface *loadImage( std::string filename ) {
     //The image that's loaded
     SDL_Surface* loadedImage = NULL;
     
@@ -27,7 +54,7 @@ SDL_Surface *load_image( std::string filename )
     if( loadedImage != NULL )
     {
         //Create an optimized image
-        optimizedImage = SDL_DisplayFormat( loadedImage );
+        optimizedImage = SDL_DisplayFormatAlpha( loadedImage );
         
         //Free the old image
         SDL_FreeSurface( loadedImage );
@@ -38,7 +65,7 @@ SDL_Surface *load_image( std::string filename )
 }
 
 // Blitting function
-void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
+void applySurface( int x, int y, SDL_Surface* source, SDL_Surface* destination )
 {
     //Make a temporary rectangle to hold the offsets
     SDL_Rect offset;
@@ -51,9 +78,7 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination 
     SDL_BlitSurface( source, NULL, destination, &offset );
 }
 
-
-int main( int argc, char* args[] )
-{
+int initGame(){
 	//Initialize all SDL subsystems
     if( SDL_Init( SDL_INIT_EVERYTHING ) == -1 )
     {
@@ -62,38 +87,165 @@ int main( int argc, char* args[] )
 
 	//Set up the screen
     screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
+
 	//If there was an error in setting up the screen
-    if( screen == NULL )
-    {
-        return 1;    
+    if( screen == NULL ){
+        return -1;    
     }
 
 	//Set the window caption
-    SDL_WM_SetCaption( "Hello World", NULL );
+    SDL_WM_SetCaption( "Dark something", NULL );
 
-	//Load the images
-    message = load_image( "../Assets/Images/hello.bmp" );
-    background = load_image( "../Assets/Images/background.bmp" );
-    
+	// Setup controllers
+	mapController =  new MapController("level1");
+
+	// Create character
+	vector<Point2D*> * points = new vector<Point2D*>();
+	points->push_back(new Point2D(0,0));
+	
+	points->push_back(new Point2D(15,-4));
+	points->push_back(new Point2D(15,-24));
+	points->push_back(new Point2D(15,-12));
+	points->push_back(new Point2D(15,-31));
+	points->push_back(new Point2D(0,-31));
+	points->push_back(new Point2D(-15,-24));
+	points->push_back(new Point2D(-15,-12));
+	points->push_back(new Point2D(-15,-31));
+	points->push_back(new Point2D(-15,-4));
+	
+
+	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
+								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
+								32, 32, 
+								CHAR_SPEED,
+								points);
+
+	inputController = new InputController();
+	physicsController = new PhysicsController(character, mapController->getLevel());	
+	camera = new Camera(character->getX(), character->getY());
+	
+	return 1;
+}
+
+void moveCharacter(int ticks){
+	//int movement = min(10, character->getSpeed()*ticks/100);
+	int movement = character->getSpeed()*ticks/100;
+	if (inputController->right()){ // && physicsController->characterOnGround()
+		character->setXMovement(movement);
+	}
+	if (inputController->left()){ // && physicsController->characterOnGround()
+		character->setXMovement(movement*-1);
+	}
+	if (inputController->jump() && physicsController->characterOnGround()){
+		character->setYMovement(CHARACTER_JUMP_POWER*-1);
+	}
+	if (physicsController->characterOnGround()){
+		int i = 0;
+	}
+}
+
+int update(int ticks){
+	ticks = max(1, min(1000,ticks));
+	moveCharacter(ticks);
+	physicsController->gravity(ticks);
+	physicsController->move();
+	camera->move(ticks, character);
+	return 1;
+}
+
+void drawLevel(){
+	int xFrom = max(0, (character->getX()/TILE_SIZE)-VISION);
+	int xTo = min(LEVEL_WIDTH, (character->getX()/TILE_SIZE)+VISION);
+
+	int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
+
+	for(int y = 0; y < LEVEL_HEIGHT; y++){
+		for(int x = xFrom; x < xTo; x++){
+			int val = mapController->getLevel()->at(x,y);
+			if (val > 0 && val < 10){
+				applySurface(x*TILE_SIZE - cameraOffsetX, y*TILE_SIZE - cameraOffsetY, mapController->getTileImage(val),screen);
+			}
+		}
+	}
+}
+
+void drawCharacter(){
+
+	int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
+
+	//Apply the character to the screen
+	applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getSprite()->getImage(), screen);
+
+}
+
+int draw(){
+	//Load the background
+	Sprite* bg = mapController->getBackground();
+
 	//Apply the background to the screen
-    apply_surface( 0, 0, background, screen );
+	applySurface( 0, 0, bg->getImage(), screen);
 
-	 //Apply the message to the screen
-    apply_surface( 180, 140, message, screen );
+	// Apply the level to the screen
+	drawLevel();
+
+	// Apply the character to the screen
+	drawCharacter();
 
 	//Update the screen
-    if( SDL_Flip( screen ) == -1 )
-    {
-        return 1;    
+    if( SDL_Flip( screen ) == -1 ){
+        return -1;    
     }
 
-	//Wait 2 seconds
-    SDL_Delay( 8000 );
+	return 1;
+}
 
-   //Free the surfaces
-    SDL_FreeSurface( message );
-    SDL_FreeSurface( background );
-    
+int main( int argc, char* args[] ){
+
+	// Init game
+	if (initGame() == -1){
+		return -1;
+	}
+
+	// Prepare timer and stuff
+	Uint32 oldTime;
+	oldTime = SDL_GetTicks();
+	SDL_Event sdlEvent;
+	bool quit = false;
+	Uint32 loopStarted;
+
+	// Game loop
+	while(!quit){
+		loopStarted = SDL_GetTicks();
+
+		// Poll events
+		while(SDL_PollEvent(&sdlEvent)) {
+			switch(sdlEvent.type){
+				case SDL_QUIT : quit = true; break;
+				case SDL_KEYDOWN : inputController->handleKeyEvent(&sdlEvent); break;
+				case SDL_KEYUP : inputController->handleKeyEvent(&sdlEvent); break;
+			}
+		}
+
+		// Update
+		int newTime = SDL_GetTicks();
+		int TimeSinceLastFrame = newTime - oldTime;
+		oldTime = newTime;
+		if (update(TimeSinceLastFrame) == -1){
+			return -1;
+		}
+
+		// Draw
+		if (draw() == -1){
+			return -1;
+		}	
+
+		if ((SDL_GetTicks() - loopStarted) < 1000/FPS){
+			SDL_Delay((1000/FPS) - (SDL_GetTicks() - loopStarted));
+		}
+	}
+
     //Quit SDL
     SDL_Quit();
     

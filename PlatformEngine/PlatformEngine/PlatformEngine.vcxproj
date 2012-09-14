@@ -65,7 +65,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="InputController.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhysicsController.cpp" />
+    <ClCompile Include="Point2D.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="MapController.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Character.h" />
+    <ClInclude Include="InputController.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="PhysicsController.h" />
+    <ClInclude Include="Point2D.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="MapController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

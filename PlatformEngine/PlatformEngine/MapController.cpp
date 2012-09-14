@@ -26,7 +26,7 @@ MapController::MapController(string levelName)
 
 void MapController::loadTileset()
 {
-	for (int i = 0; i < 9; i++){
+	for (int i = 1; i <= 10; i++){
 		tileset[i] = loadTileImage(i);
 	}
 }
@@ -43,6 +43,7 @@ int MapController::intFromChar(char c){
 		case '7' : return 7;
 		case '8' : return 8;
 		case '9' : return 9;
+		case 'g' : return 10;
 	}
 	return 0;
 }

@@ -18,7 +18,7 @@ Character::Character(int xpos, int ypos, int hei, int wid, int spe, vector<Point
 	xMovement = 0;
 	yMovement = 0;
 	speed = spe;
-	sprite = new Sprite (x, y, 32, 32, loadImage("../Assets/Images/char.png"));
+	sprite = new Sprite (x, y,32, 32, loadImage("../Assets/Anim/CharWalkRight/1.png"));
 	hitPoints = points;
 }
 

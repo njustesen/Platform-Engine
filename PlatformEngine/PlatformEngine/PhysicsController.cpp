@@ -26,6 +26,14 @@ void PhysicsController::gravity(int ticks){
 	}
 }
 
+bool PhysicsController::isSolid(int tile){
+	switch(tile){
+	case 0: return false;
+	case 10: return false;
+	}
+	return true;
+}
+
 void PhysicsController::move(){
 
 	int moveX = character->getXMovement();
@@ -44,13 +52,13 @@ void PhysicsController::move(){
 		int newRealY = realY + moveY;
 
 		if ((int)(character->getYMovement()) > 0 && y == 0){
-			if (level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE) != 0){
+			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealY = (newRealY / TILE_SIZE) * TILE_SIZE;
 				character->setYMovement(0);
 				charOnGround = true;
 			} else charOnGround = false;
 		} else if ((int)(character->getYMovement()) < 0 && y == character->getHeight()*-1 +1){
-			if (level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE) != 0){
+			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealY = min(realY, (newRealY / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
 				if (character->getYMovement() < 0){
 					character->setYMovement(0);
@@ -73,12 +81,12 @@ void PhysicsController::move(){
 		
 		// Check horizontally - return newX if collision
 		if ((int)(character->getXMovement()) > 0 && x > 0){
-			if (level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE) != 0){
+			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealX = max(realX, ((newRealX / TILE_SIZE) * TILE_SIZE - 1));
 				character->setXMovement(0);
 			}
 		} else if ((int)(character->getXMovement()) < 0 && x < 0){
-			if (level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE) != 0){
+			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealX = min(realX, (newRealX / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
 				character->setXMovement(0);
 			}

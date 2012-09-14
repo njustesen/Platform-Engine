@@ -8,6 +8,7 @@ private:
 	Character * character;
 	bool charOnGround;
 	double round(double number);
+	bool isSolid(int tile);
 public:
 	void gravity(int ticks);
 	bool characterOnGround();

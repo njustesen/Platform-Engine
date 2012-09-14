@@ -12,7 +12,7 @@ class MapController
 private: 
 	Level * level;
 	Sprite *background;
-	SDL_Surface* tileset[10]; 
+	SDL_Surface* tileset[100]; 
 	int intFromChar(char c);
 	int charX;
 	int charY;

@@ -15,7 +15,7 @@
 using namespace std;
 
 //The attributes of the screen
-const extern int SCREEN_WIDTH = 800;
+const extern int SCREEN_WIDTH = 1000;
 const extern int SCREEN_HEIGHT = 600;
 const extern int SCREEN_BPP = 32;
 const extern int TILE_SIZE = 32;
@@ -103,15 +103,15 @@ int initGame(){
 	vector<Point2D*> * points = new vector<Point2D*>();
 	points->push_back(new Point2D(0,0));
 	
-	points->push_back(new Point2D(15,-4));
-	points->push_back(new Point2D(15,-24));
-	points->push_back(new Point2D(15,-12));
-	points->push_back(new Point2D(15,-31));
+	points->push_back(new Point2D(10,-4));
+	points->push_back(new Point2D(10,-24));
+	points->push_back(new Point2D(10,-12));
+	points->push_back(new Point2D(10,-31));
 	points->push_back(new Point2D(0,-31));
-	points->push_back(new Point2D(-15,-24));
-	points->push_back(new Point2D(-15,-12));
-	points->push_back(new Point2D(-15,-31));
-	points->push_back(new Point2D(-15,-4));
+	points->push_back(new Point2D(-10,-24));
+	points->push_back(new Point2D(-10,-12));
+	points->push_back(new Point2D(-10,-31));
+	points->push_back(new Point2D(-10,-4));
 	
 
 	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
@@ -163,7 +163,7 @@ void drawLevel(){
 	for(int y = 0; y < LEVEL_HEIGHT; y++){
 		for(int x = xFrom; x < xTo; x++){
 			int val = mapController->getLevel()->at(x,y);
-			if (val > 0 && val < 10){
+			if (val > 0){
 				applySurface(x*TILE_SIZE - cameraOffsetX, y*TILE_SIZE - cameraOffsetY, mapController->getTileImage(val),screen);
 			}
 		}

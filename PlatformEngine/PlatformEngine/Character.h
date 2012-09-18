@@ -16,10 +16,11 @@ private:
 	int speed;
 	double bounceEffect;
 	Sprite * sprite;
-	CollisionBox * collisionBox;
 public:
 	int getX();
 	int getY();
+	int getHeight();
+	int getWidth();
 	int getSpeed();
 	double getXMovement();
 	double getYMovement();
@@ -28,10 +29,9 @@ public:
 	void setYMovement(double movement);
 	void setX(int xpos);
 	void setY(int ypos);
-	CollisionBox * getCollisionBox();
 	Sprite * getSprite();
 	Character(void);
-	Character(int xpos, int ypos, CollisionBox * box, int spe);
+	Character(int xpos, int ypos, int w, int h, int spe);
 	~Character(void);
 };
 

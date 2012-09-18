@@ -9,24 +9,15 @@ Character::Character(void)
 {
 }
 
-Character::Character(int xpos, int ypos, CollisionBox * box, int spe)
+Character::Character(int xpos, int ypos, int w, int h, int spe)
+	: x(xpos), y(ypos), width(w), height(h), xMovement(0), yMovement(0),
+	 speed(spe), sprite(new Sprite(x,y,32,32,loadImage("../Assets/Anim/CharWalkRight/1.png"))),
+	 bounceEffect(0)
 {
-	x = xpos;
-	y = ypos;
-	xMovement = 0;
-	yMovement = 0;
-	speed = spe;
-	sprite = new Sprite (x, y,32, 32, loadImage("../Assets/Anim/CharWalkRight/1.png"));
-	collisionBox = box;
-	bounceEffect = 0.0f;
 }
 
 Sprite * Character::getSprite(){
 	return sprite;
-}
-
-CollisionBox * Character::getCollisionBox(){
-	return collisionBox;
 }
 
 int Character::getX(){
@@ -56,7 +47,7 @@ void Character::setXMovement(double movement){
 void Character::setYMovement(double movement){
 	yMovement = movement;
 }
-/*
+
 int Character::getWidth(){
 	return width;
 }
@@ -64,7 +55,7 @@ int Character::getWidth(){
 int Character::getHeight(){
 	return height;
 }
-*/
+
 int Character::getSpeed(){
 	return speed;
 }

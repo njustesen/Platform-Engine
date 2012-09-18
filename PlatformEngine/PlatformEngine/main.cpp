@@ -100,15 +100,10 @@ int initGame(){
 	mapController =  new MapController("level1");
 
 	// Create character
-	vector<Point2D*> * top = new vector<Point2D*>();
-	vector<Point2D*> * bottom = new vector<Point2D*>();
-	vector<Point2D*> * left = new vector<Point2D*>();
-	vector<Point2D*> * right = new vector<Point2D*>();
-	CollisionBox * box = new CollisionBox(bottom, top, left, right, 24, 30);
-
 	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
 								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
-								box, 
+								24,
+								30, 
 								CHAR_SPEED);
 
 	inputController = new InputController();
@@ -129,9 +124,6 @@ void moveCharacter(int ticks){
 	}
 	if (inputController->jump() && physicsController->characterOnGround()){
 		character->setYMovement(CHARACTER_JUMP_POWER*-1);
-	}
-	if (physicsController->characterOnGround()){
-		int i = 0;
 	}
 }
 

@@ -9,10 +9,11 @@ private:
 	bool charOnGround;
 	double round(double number);
 	bool isSolid(int tile);
-	int checkDownwards(int x, int y, int moveX, int moveY);
-	int checkUpwards(int x, int y, int moveX, int moveY);
-	int checkRight(int x, int y, int moveX, int moveY);
-	int checkLeft(int x, int y, int moveX, int moveY);
+	double checkDownwards(int x, int y, double moveX, double moveY);
+	double checkUpwards(int x, int y, double moveX, double moveY);
+	double checkRight(int x, int y, double moveX, double moveY);
+	double checkLeft(int x, int y, double moveX, double moveY);
+	double getGravitationalAcceleration(int ticks);
 public:
 	void gravity(int ticks);
 	bool characterOnGround();

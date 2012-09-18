@@ -14,6 +14,7 @@ private:
 	int width;
 	int height;
 	int speed;
+	double bounceEffect;
 	Sprite * sprite;
 	vector<Point2D*> * hitPoints;
 public:
@@ -24,6 +25,7 @@ public:
 	int getSpeed();
 	double getXMovement();
 	double getYMovement();
+	double getBounceEffect();
 	void setXMovement(double movement);
 	void setYMovement(double movement);
 	void setX(int xpos);

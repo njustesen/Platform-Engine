@@ -20,6 +20,7 @@ Character::Character(int xpos, int ypos, int hei, int wid, int spe, vector<Point
 	speed = spe;
 	sprite = new Sprite (x, y,32, 32, loadImage("../Assets/Anim/CharWalkRight/1.png"));
 	hitPoints = points;
+	bounceEffect = 0.8f;
 }
 
 Sprite * Character::getSprite(){
@@ -44,6 +45,10 @@ double Character::getXMovement(){
 
 double Character::getYMovement(){
 	return yMovement;
+}
+
+double Character::getBounceEffect(){
+	return bounceEffect;
 }
 
 void Character::setXMovement(double movement){

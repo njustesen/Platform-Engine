@@ -54,14 +54,23 @@ void PhysicsController::move(){
 		if ((int)(character->getYMovement()) > 0 && y == 0){
 			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealY = (newRealY / TILE_SIZE) * TILE_SIZE;
-				character->setYMovement(0);
-				charOnGround = true;
+				// Bounce?
+				if (character->getBounceEffect() > 0 && character->getYMovement() > 1.6f){
+					character->setYMovement(character->getYMovement()*(-1)*character->getBounceEffect());
+				} else {
+					character->setYMovement(0);
+					charOnGround = true;
+				}
 			} else charOnGround = false;
 		} else if ((int)(character->getYMovement()) < 0 && y == character->getHeight()*-1 +1){
 			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
 				newRealY = min(realY, (newRealY / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
-				if (character->getYMovement() < 0){
-					character->setYMovement(0);
+				if (character->getBounceEffect() > 0){
+					character->setYMovement(character->getYMovement()*(-1)*character->getBounceEffect());
+				} else {
+					if (character->getYMovement() < 0){
+						character->setYMovement(0);
+					}
 				}
 			}
 		}
@@ -82,13 +91,21 @@ void PhysicsController::move(){
 		// Check horizontally - return newX if collision
 		if ((int)(character->getXMovement()) > 0 && x > 0){
 			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
-				newRealX = max(realX, ((newRealX / TILE_SIZE) * TILE_SIZE - 1));
-				character->setXMovement(0);
+ 				if (character->getBounceEffect() > 0 && character->getXMovement() > 1.6f){
+					character->setXMovement(character->getXMovement()*(-1)*character->getBounceEffect());
+				} else {
+					newRealX = max(realX, ((newRealX / TILE_SIZE) * TILE_SIZE - 1));
+					character->setXMovement(0);
+				}
 			}
 		} else if ((int)(character->getXMovement()) < 0 && x < 0){
 			if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
-				newRealX = min(realX, (newRealX / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
-				character->setXMovement(0);
+				if (character->getBounceEffect() > 0 && character->getXMovement() > -1.6f){
+					character->setXMovement(character->getXMovement()*(-1)*character->getBounceEffect());
+				} else {
+					newRealX = min(realX, (newRealX / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
+					character->setXMovement(0);
+				}
 			}
 		}
 		

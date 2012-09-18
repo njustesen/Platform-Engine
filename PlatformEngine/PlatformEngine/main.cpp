@@ -23,7 +23,7 @@ const extern int VISION = 25;
 const extern int CHAR_SPEED = 20;
 const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
-const extern int CAMERA_DELAY = 300;
+const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
 const extern int CHARACTER_JUMP_POWER = 7.0f;
 

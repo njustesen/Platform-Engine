@@ -100,25 +100,16 @@ int initGame(){
 	mapController =  new MapController("level1");
 
 	// Create character
-	vector<Point2D*> * points = new vector<Point2D*>();
-	points->push_back(new Point2D(0,0));
-	
-	points->push_back(new Point2D(10,-4));
-	points->push_back(new Point2D(10,-24));
-	points->push_back(new Point2D(10,-12));
-	points->push_back(new Point2D(10,-31));
-	points->push_back(new Point2D(0,-31));
-	points->push_back(new Point2D(-10,-24));
-	points->push_back(new Point2D(-10,-12));
-	points->push_back(new Point2D(-10,-31));
-	points->push_back(new Point2D(-10,-4));
-	
+	vector<Point2D*> * top = new vector<Point2D*>();
+	vector<Point2D*> * bottom = new vector<Point2D*>();
+	vector<Point2D*> * left = new vector<Point2D*>();
+	vector<Point2D*> * right = new vector<Point2D*>();
+	CollisionBox * box = new CollisionBox(bottom, top, left, right, 24, 30);
 
 	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
 								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
-								32, 32, 
-								CHAR_SPEED,
-								points);
+								box, 
+								CHAR_SPEED);
 
 	inputController = new InputController();
 	physicsController = new PhysicsController(character, mapController->getLevel());	

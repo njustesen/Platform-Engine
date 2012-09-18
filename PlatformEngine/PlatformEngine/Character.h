@@ -1,5 +1,5 @@
 #include "Sprite.h"
-#include "Point2D.h"
+#include "CollisionBox.h"
 #include <vector>
 using namespace std;
 
@@ -16,12 +16,10 @@ private:
 	int speed;
 	double bounceEffect;
 	Sprite * sprite;
-	vector<Point2D*> * hitPoints;
+	CollisionBox * collisionBox;
 public:
 	int getX();
 	int getY();
-	int getWidth();
-	int getHeight();
 	int getSpeed();
 	double getXMovement();
 	double getYMovement();
@@ -30,10 +28,10 @@ public:
 	void setYMovement(double movement);
 	void setX(int xpos);
 	void setY(int ypos);
+	CollisionBox * getCollisionBox();
 	Sprite * getSprite();
-	vector<Point2D*> * getHitPoints();
 	Character(void);
-	Character(int xpos, int ypos, int height, int width, int spe, vector<Point2D*> * points);
+	Character(int xpos, int ypos, CollisionBox * box, int spe);
 	~Character(void);
 };
 

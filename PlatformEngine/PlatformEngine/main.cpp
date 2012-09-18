@@ -102,7 +102,7 @@ int initGame(){
 	// Create character
 	character = new Character(	mapController->getCharX()*TILE_SIZE+TILE_SIZE/2, 
 								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
-								24,
+								20,
 								30, 
 								CHAR_SPEED);
 

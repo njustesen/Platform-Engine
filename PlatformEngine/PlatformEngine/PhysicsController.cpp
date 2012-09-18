@@ -30,12 +30,50 @@ void PhysicsController::gravity(int ticks){
 	}
 }
 
-bool PhysicsController::isSolid(int tile){
+bool PhysicsController::isSolidRightStairs(int tile, int x, int y){
+	int relX = x - ((x / TILE_SIZE) * TILE_SIZE);
+	int relY = y - ((y / TILE_SIZE) * TILE_SIZE);
+
+	if (relY > relX){
+		return true;
+	}
+	return false;
+}
+
+bool PhysicsController::isSolidLeftStairs(int tile, int x, int y){
+	int relX = x - ((x / TILE_SIZE) * TILE_SIZE);
+	int relY = y - ((y / TILE_SIZE) * TILE_SIZE);
+
+	if (TILE_SIZE - relY < relX){
+		return true;
+	}
+	return false;
+}
+
+bool PhysicsController::isSolid(int tile, int x, int y){
 	switch(tile){
 	case 0: return false;
+	case 6: return isSolidRightStairs(tile, x, y);
+	case 7: return isSolidLeftStairs(tile, x, y);
 	case 10: return false;
 	}
 	return true;
+}
+
+int PhysicsController::correctYPosition(int x, int y, int mapValue){
+	int relX = x - ((x / TILE_SIZE) * TILE_SIZE);
+	int relY = y - ((y / TILE_SIZE) * TILE_SIZE);
+
+	if (mapValue == 1){
+		return (y / TILE_SIZE) * TILE_SIZE;
+	} else if (mapValue == 6){
+		y += relX - relY;
+		return y;
+	} else if (mapValue == 7){
+		y -= relY - relX;
+		return y;
+	}
+	return (y / TILE_SIZE) * TILE_SIZE;
 }
 
 double PhysicsController::checkDownwards(int x, int y, double moveX, double moveY){
@@ -48,9 +86,10 @@ double PhysicsController::checkDownwards(int x, int y, double moveX, double move
 	// Check for collisions
 	if (moveY > 0){
 		// Collision?
-		if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
+		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
+		if (isSolid(mapValue, newRealX, newRealY)){
 			// Correct position
-			newRealY = (newRealY / TILE_SIZE) * TILE_SIZE;
+			newRealY = correctYPosition(newRealX, newRealY, mapValue);
 			// Bounce?
 			if (character->getBounceEffect() > 0 && moveY > 1.6f){
 				character->setYMovement(moveY*(-1)*character->getBounceEffect());
@@ -76,7 +115,8 @@ double PhysicsController::checkUpwards(int x, int y, double moveX, double moveY)
 	// Check for collisions
 	if (moveY < 0){
 		// Collision?
-		if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
+		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
+		if (isSolid(mapValue, newRealX, newRealY)){
 			// Correct position
 			newRealY = min(realY, (newRealY / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
 			// Bounce?
@@ -103,7 +143,8 @@ double PhysicsController::checkRight(int x, int y, double moveX, double moveY){
 	// Check for collisions
 	if (moveX > 0){
 		// Collision?
-		if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
+		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
+		if (isSolid(mapValue, newRealX, newRealY)){
 			// Bounce?
 			if (character->getBounceEffect() > 0 && moveX > 1.6f){
 				character->setXMovement(moveX*(-1)*character->getBounceEffect());
@@ -128,7 +169,8 @@ double PhysicsController::checkLeft(int x, int y, double moveX, double moveY){
 	// Check for collisions
 	if (moveX < 0){
 		// Collision?
-		if (isSolid(level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE))){
+		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
+		if (isSolid(mapValue, newRealX, newRealY)){
 			// Bounce?
 			if (character->getBounceEffect() > 0 && moveX > -1.6f){
 				character->setXMovement(moveX*(-1)*character->getBounceEffect());

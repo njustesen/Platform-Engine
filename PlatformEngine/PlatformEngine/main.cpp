@@ -20,7 +20,7 @@ const extern int SCREEN_HEIGHT = 600;
 const extern int SCREEN_BPP = 32;
 const extern int TILE_SIZE = 32;
 const extern int VISION = 25;
-const extern int CHAR_SPEED = 20;
+const extern double CHAR_SPEED = 20;
 const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
@@ -104,7 +104,8 @@ int initGame(){
 								mapController->getCharY()*TILE_SIZE+TILE_SIZE-1, 
 								20,
 								30, 
-								CHAR_SPEED);
+								CHAR_SPEED,
+								0.0);
 
 	inputController = new InputController();
 	physicsController = new PhysicsController(character, mapController->getLevel());	
@@ -114,8 +115,8 @@ int initGame(){
 }
 
 void moveCharacter(int ticks){
-	//int movement = min(10, character->getSpeed()*ticks/100);
-	int movement = character->getSpeed()*ticks/100;
+
+	int movement = int(character->getSpeed())*ticks/100;
 	if (inputController->right()){ // && physicsController->characterOnGround()
 		character->setXMovement(movement);
 	}

@@ -1,37 +1,30 @@
 #include "Sprite.h"
-#include "CollisionBox.h"
-#include <vector>
+#include "GameObject.h"
 using namespace std;
 
 #pragma once
-class Character
+class Character: public GameObject
 {
 private: 
-	int x;
-	int y;
-	double xMovement;
-	double yMovement;
-	int width;
-	int height;
-	int speed;
-	double bounceEffect;
-	Sprite * sprite;
+
 public:
-	int getX();
-	int getY();
+	void act();
+	/*
 	int getHeight();
 	int getWidth();
-	int getSpeed();
-	double getXMovement();
-	double getYMovement();
-	double getBounceEffect();
-	void setXMovement(double movement);
-	void setYMovement(double movement);
+	int getX();
+	int getY();
 	void setX(int xpos);
 	void setY(int ypos);
+	double getSpeed();
+	double getXMovement();
+	double getYMovement();
+	void setXMovement(double movement);
+	void setYMovement(double movement);
+	double getBounceEffect();
 	Sprite * getSprite();
-	Character(void);
-	Character(int xpos, int ypos, int w, int h, int spe);
+	*/
+	Character(int xpos, int ypos, int w, int h, double spd, double bounceEffect);
 	~Character(void);
 };
 

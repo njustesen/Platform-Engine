@@ -1,4 +1,5 @@
 #include "Sprite.h"
+#include "Animation.h"
 
 #pragma once
 class GameObject
@@ -13,6 +14,9 @@ protected:
 	double speed;
 	double bounceEffect;
 	Sprite * sprite;
+	Animation * walkingRight;
+	Animation * walkingLeft;
+	Animation * currentAnimation;
 public:
 	virtual void act() = 0;
 	int getWidth();
@@ -21,6 +25,12 @@ public:
 	int getY();
 	void setX(int xpos);
 	void setY(int ypos);
+	Animation * getCurrentAnim();
+	Animation * getRightAnim();
+	Animation * getLeftAnim();
+	void setWalkingRightAnim(Animation * animation);
+	void setWalkingLeftAnim(Animation * animation);
+	void setCurrentAnim(Animation * animation);
 	double getSpeed();
 	double getXMovement();
 	double getYMovement();

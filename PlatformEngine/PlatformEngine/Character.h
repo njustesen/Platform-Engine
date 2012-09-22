@@ -9,6 +9,7 @@ private:
 
 public:
 	void act();
+	void setupAnimations();
 	/*
 	int getHeight();
 	int getWidth();

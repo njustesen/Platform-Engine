@@ -25,7 +25,7 @@ const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
-const extern float CHARACTER_JUMP_POWER = 6.9f;
+const extern double CHARACTER_JUMP_POWER = 6.9;
 
 SDL_Surface * screen;
 MapController * mapController;
@@ -117,11 +117,21 @@ int initGame(){
 void moveCharacter(int ticks){
 
 	int movement = int(character->getSpeed())*ticks/100;
-	if (inputController->right()){ // && physicsController->characterOnGround()
+	if (inputController->right()){ // 
 		character->setXMovement(movement);
+		character->setCurrentAnim(character->getRightAnim());
+		if (physicsController->characterOnGround()){
+			// Update character animation
+			character->getCurrentAnim()->tick(ticks);
+		}
 	}
-	if (inputController->left()){ // && physicsController->characterOnGround()
+	if (inputController->left()){ // 
 		character->setXMovement(movement*-1);
+		character->setCurrentAnim(character->getLeftAnim());
+		if (physicsController->characterOnGround()){
+			// Update character animation
+			character->getCurrentAnim()->tick(ticks);
+		}
 	}
 	if (inputController->jump() && physicsController->characterOnGround()){
 		character->setYMovement(CHARACTER_JUMP_POWER*-1);
@@ -160,7 +170,7 @@ void drawCharacter(){
 	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
 
 	//Apply the character to the screen
-	applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getSprite()->getImage(), screen);
+	applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getCurrentAnim()->getCurrentFrame(), screen);
 
 }
 

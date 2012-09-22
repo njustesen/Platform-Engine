@@ -44,7 +44,7 @@ bool PhysicsController::isSolidLeftStairs(int tile, int x, int y){
 	int relX = x - ((x / TILE_SIZE) * TILE_SIZE);
 	int relY = y - ((y / TILE_SIZE) * TILE_SIZE);
 
-	if (TILE_SIZE - relY < relX){
+	if (relY > TILE_SIZE - relX){
 		return true;
 	}
 	return false;
@@ -70,7 +70,7 @@ int PhysicsController::correctYPosition(int x, int y, int mapValue){
 		y += relX - relY;
 		return y;
 	} else if (mapValue == 7){
-		y -= relY - relX;
+		y -= (relX) - (TILE_SIZE - relY);
 		return y;
 	}
 	return (y / TILE_SIZE) * TILE_SIZE;

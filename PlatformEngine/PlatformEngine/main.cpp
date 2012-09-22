@@ -25,7 +25,7 @@ const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
-const extern int CHARACTER_JUMP_POWER = 7.0f;
+const extern float CHARACTER_JUMP_POWER = 6.9f;
 
 SDL_Surface * screen;
 MapController * mapController;

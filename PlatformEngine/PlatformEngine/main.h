@@ -14,6 +14,6 @@ const extern int LEVEL_HEIGHT;
 const extern int LEVEL_WIDTH;
 const extern int TILE_SIZE;
 const extern int CAMERA_DELAY;
-const extern int CHARACTER_JUMP_POWER;
+const extern float CHARACTER_JUMP_POWER;
 
 SDL_Surface *loadImage(std::string filename);

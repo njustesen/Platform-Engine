@@ -12,7 +12,7 @@ Character::Character(void)
 Character::Character(int xpos, int ypos, int w, int h, int spe)
 	: x(xpos), y(ypos), width(w), height(h), xMovement(0), yMovement(0),
 	 speed(spe), sprite(new Sprite(x,y,32,32,loadImage("../Assets/Anim/CharWalkRight/1.png"))),
-	 bounceEffect(0)
+	 bounceEffect(0.0f)
 {
 }
 

@@ -14,12 +14,13 @@ Character::Character(int xpos, int ypos, int w, int h, double spd, double bounce
 	height = h;
 	speed = spd;
 	bounceEffect = bounceEffect;
-	sprite = new Sprite(x,y,32,32,loadImage("../Assets/Anim/CharWalkRight/1.png"));
 	xMovement = 0.0;
 	yMovement = 0.0;
 	walkingRight = new Animation(10);
 	walkingLeft = new Animation(10);
-
+	dying = new Animation(10);
+	alive = true;
+	onGround = false;
 	setupAnimations();
 }
 
@@ -37,7 +38,6 @@ void Character::setupAnimations(){
 	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/11.png"));
 	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/12.png"));
 
-
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/1.png"));
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/2.png"));
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/3.png"));
@@ -50,6 +50,8 @@ void Character::setupAnimations(){
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/10.png"));
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/11.png"));
 	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/12.png"));
+
+	dying->addFrame(loadImage("../Assets/Anim/Dying/1.png"));
 
 	currentAnimation = walkingRight;
 }

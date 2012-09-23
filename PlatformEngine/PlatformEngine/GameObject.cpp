@@ -1,7 +1,19 @@
 #include "GameObject.h"
 
-Sprite * GameObject::getSprite(){
-	return sprite;
+bool GameObject::isAlive(){
+	return alive;
+}
+
+bool GameObject::isOnGround(){
+	return onGround;
+}
+
+void GameObject::die(){
+	alive = false;
+}
+
+void GameObject::setOnGround(bool ground){
+	onGround = ground;
 }
 
 int GameObject::getX(){
@@ -53,11 +65,15 @@ void GameObject::setY(int ypos){
 }
 
 void GameObject::setWalkingRightAnim(Animation * animation){
-
+	walkingRight = animation;
 }
 
 void GameObject::setWalkingLeftAnim(Animation * animation){
+	walkingLeft = animation;
+}
 
+void GameObject::setDyingAnim(Animation * animation){
+	dying = animation;
 }
 
 void GameObject::setCurrentAnim(Animation * animation){
@@ -74,6 +90,10 @@ Animation * GameObject::getRightAnim(){
 
 Animation * GameObject::getLeftAnim(){
 	return walkingLeft;
+}
+
+Animation * GameObject::getDyingAnim(){
+	return dying;
 }
 
 GameObject::~GameObject(void)

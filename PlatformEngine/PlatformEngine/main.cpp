@@ -25,11 +25,12 @@ const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
-const extern double CHARACTER_JUMP_POWER = 6.9;
+const extern double CHARACTER_JUMP_POWER = 7.2;
 
 SDL_Surface * screen;
 MapController * mapController;
 Character * character;
+vector<GameObject*> * gameObjects;
 InputController * inputController;
 PhysicsController * physicsController;
 Camera * camera;
@@ -107,8 +108,11 @@ int initGame(){
 								CHAR_SPEED,
 								0.0);
 
+	gameObjects = new vector<GameObject*>;
+	gameObjects->push_back(character);
+
 	inputController = new InputController();
-	physicsController = new PhysicsController(character, mapController->getLevel());	
+	physicsController = new PhysicsController(character, gameObjects, mapController->getLevel());	
 	camera = new Camera(character->getX(), character->getY());
 	
 	return 1;
@@ -165,13 +169,13 @@ void drawLevel(){
 }
 
 void drawCharacter(){
+	if (character->isAlive()){
+		int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+		int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
 
-	int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
-	int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
-
-	//Apply the character to the screen
-	applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getCurrentAnim()->getCurrentFrame(), screen);
-
+		//Apply the character to the screen
+		applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getCurrentAnim()->getCurrentFrame(), screen);
+	}
 }
 
 int draw(){

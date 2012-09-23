@@ -1,4 +1,4 @@
-﻿Build started 22-09-2012 22:01:14.
+﻿Build started 23-09-2012 13:57:54.
      1>Project "C:\Users\niels\Documents\GitHub\Platform-Engine\PlatformEngine\PlatformEngine\PlatformEngine.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\PlatformEngine.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -30,4 +30,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.71
+Time Elapsed 00:00:01.65

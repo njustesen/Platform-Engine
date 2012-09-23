@@ -6,18 +6,18 @@
 #include <vector>
 using namespace std;
 
-Character::Character(int xpos, int ypos, int w, int h, double spd, double bounceEffect)
+Character::Character(int xpos, int ypos, int w, int h, double spd, double bounce)
 {
 	x = xpos;
 	y = ypos;
 	width = w;
 	height = h;
 	speed = spd;
-	bounceEffect = bounceEffect;
+	bounceEffect = bounce;
 	xMovement = 0.0;
 	yMovement = 0.0;
-	walkingRight = new Animation(10);
-	walkingLeft = new Animation(10);
+	walkingRight = new Animation(4);
+	walkingLeft = new Animation(4);
 	dying = new Animation(10);
 	alive = true;
 	onGround = false;
@@ -56,7 +56,7 @@ void Character::setupAnimations(){
 	currentAnimation = walkingRight;
 }
 
-void Character::act(){}
+void Character::act(int ticks){}
 
 
 Character::~Character(void)

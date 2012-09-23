@@ -20,7 +20,7 @@ protected:
 	Animation * dying;
 	Animation * currentAnimation;
 public:
-	virtual void act() = 0;
+	virtual void act(int ticks) = 0;
 	void die();
 	void setOnGround(bool ground);
 	int getWidth();

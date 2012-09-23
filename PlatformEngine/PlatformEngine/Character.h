@@ -1,4 +1,3 @@
-#include "Sprite.h"
 #include "GameObject.h"
 using namespace std;
 
@@ -8,9 +7,9 @@ class Character: public GameObject
 private: 
 
 public:
-	void act();
+	void act(int ticks);
 	void setupAnimations();
-	Character(int xpos, int ypos, int w, int h, double spd, double bounceEffect);
+	Character(int xpos, int ypos, int w, int h, double spd, double bounce);
 	~Character(void);
 };
 

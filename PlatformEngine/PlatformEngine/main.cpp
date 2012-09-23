@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include <string>
 #include "SDL_image.h"
+#include "Fireball.h"
 #include "MapController.h"
 #include "InputController.h"
 #include "PhysicsController.h"
@@ -21,12 +22,20 @@ const extern int SCREEN_BPP = 32;
 const extern int TILE_SIZE = 32;
 const extern int VISION = 25;
 const extern double CHAR_SPEED = 20;
+const extern int MONSTER_WIDTH = 24;
+const extern int MONSTER_HEIGHT = 32;
+const extern double MONSTER_SPEED = 14;
 const extern int LEVEL_HEIGHT = 320;
 const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
-const extern double CHARACTER_JUMP_POWER = 7.2;
+const extern double CHARACTER_JUMP_POWER = 7.8;
+const extern int MONSTER_RATE_OF_FIRE = 1000;
+const extern int FIREBALL_TIME_ALIVE = 5000;
+const extern int FIREBALL_WIDTH = 12;
+const extern int FIREBALL_HEIGHT = 12;
 
+SDL_Surface * FIREBALL_IMAGE;
 SDL_Surface * screen;
 MapController * mapController;
 Character * character;
@@ -106,10 +115,15 @@ int initGame(){
 								20,
 								30, 
 								CHAR_SPEED,
-								0.0);
+								0.2);
 
 	gameObjects = new vector<GameObject*>;
 	gameObjects->push_back(character);
+	// Insert all objects in level
+	for(int i = 0; i < mapController->getMonsters()->size(); i++){
+		gameObjects->push_back(mapController->getMonsters()->at(i));
+	}
+	FIREBALL_IMAGE = loadImage("../Assets/Anim/Fireball/fireball.png");
 
 	inputController = new InputController();
 	physicsController = new PhysicsController(character, gameObjects, mapController->getLevel());	
@@ -118,13 +132,17 @@ int initGame(){
 	return 1;
 }
 
+void monsterFire(int x, int y){
+	gameObjects->push_back(new Fireball(x,y-MONSTER_HEIGHT/2, -3 , -3, FIREBALL_IMAGE));
+}
+
 void moveCharacter(int ticks){
 
 	int movement = int(character->getSpeed())*ticks/100;
 	if (inputController->right()){ // 
 		character->setXMovement(movement);
 		character->setCurrentAnim(character->getRightAnim());
-		if (physicsController->characterOnGround()){
+		if (character->isOnGround()){
 			// Update character animation
 			character->getCurrentAnim()->tick(ticks);
 		}
@@ -132,19 +150,28 @@ void moveCharacter(int ticks){
 	if (inputController->left()){ // 
 		character->setXMovement(movement*-1);
 		character->setCurrentAnim(character->getLeftAnim());
-		if (physicsController->characterOnGround()){
+		if (character->isOnGround()){
 			// Update character animation
 			character->getCurrentAnim()->tick(ticks);
 		}
 	}
-	if (inputController->jump() && physicsController->characterOnGround()){
+	if (inputController->jump() && character->isOnGround()){
 		character->setYMovement(CHARACTER_JUMP_POWER*-1);
+	}
+
+	character->setXMovement(character->getXMovement() * 0.9);
+}
+
+void updateObjects(int ticks){
+	for(int i = 0; i < gameObjects->size(); i++){
+		gameObjects->at(i)->act(ticks);
 	}
 }
 
 int update(int ticks){
 	ticks = max(1, min(1000,ticks));
 	moveCharacter(ticks);
+	updateObjects(ticks);
 	physicsController->gravity(ticks);
 	physicsController->move();
 	camera->move(ticks, character);
@@ -168,13 +195,15 @@ void drawLevel(){
 	}
 }
 
-void drawCharacter(){
-	if (character->isAlive()){
-		int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
-		int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
+void drawObjects(){
+	for(int i = 0; i < gameObjects->size(); i++){
+		if (gameObjects->at(i)->isAlive()){
+			int cameraOffsetX = camera->getX() - SCREEN_WIDTH/2;
+			int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
 
-		//Apply the character to the screen
-		applySurface( character->getX()-TILE_SIZE/2 - cameraOffsetX, character->getY()-TILE_SIZE - cameraOffsetY, character->getCurrentAnim()->getCurrentFrame(), screen);
+			//Apply the character to the screen
+			applySurface( gameObjects->at(i)->getX() - gameObjects->at(i)->getWidth()/2 - cameraOffsetX, gameObjects->at(i)->getY()-gameObjects->at(i)->getHeight() - cameraOffsetY, gameObjects->at(i)->getCurrentAnim()->getCurrentFrame(), screen);
+		}
 	}
 }
 
@@ -188,8 +217,8 @@ int draw(){
 	// Apply the level to the screen
 	drawLevel();
 
-	// Apply the character to the screen
-	drawCharacter();
+	// Apply Game Objects to the screen
+	drawObjects();
 
 	//Update the screen
     if( SDL_Flip( screen ) == -1 ){

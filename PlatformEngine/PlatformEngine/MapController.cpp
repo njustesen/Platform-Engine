@@ -1,5 +1,6 @@
 #include "MapController.h"
-#include "Sprite.h"
+#include "GameObject.h"
+#include "Monster.h"
 #include "SDL.h"
 #include "main.h"
 #include "Level.h"
@@ -54,6 +55,7 @@ void MapController::loadLevel(string levelName){
 
 	// Load level
 	level = new Level();
+	monsters = new vector<GameObject*>();
 	string line;
 	ifstream myfile ("../Levels/level1.lv");
 	if (myfile.is_open()){
@@ -67,6 +69,9 @@ void MapController::loadLevel(string levelName){
 				if (line.at(x) == 'c'){
 					charX = xx;
 					charY = y;
+					level->insert(xx, y, 0);
+				} else if (line.at(x) == 'm'){
+					monsters->push_back(new Monster(xx * TILE_SIZE + TILE_SIZE/2, y * TILE_SIZE + TILE_SIZE));
 					level->insert(xx, y, 0);
 				} else if (line.at(x) != 9){ // Ignore tabs
 					level->insert(xx, y, intFromChar(line.at(x)));
@@ -92,6 +97,10 @@ int MapController::getCharX(){
 
 int MapController::getCharY(){
 	return charY;
+}
+
+vector<GameObject*> * MapController::getMonsters(){
+	return monsters;
 }
 
 SDL_Surface *MapController::loadTileImage(int tile){

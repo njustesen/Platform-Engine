@@ -1,4 +1,4 @@
-#include "Sprite.h"
+#include "GameObject.h"
 #include "SDL.h"
 #include "Level.h"
 #include <string>
@@ -16,10 +16,12 @@ private:
 	int intFromChar(char c);
 	int charX;
 	int charY;
+	vector<GameObject*> * monsters;
 	void loadTileset();
 public:
 	int getCharX();
 	int getCharY();
+	vector<GameObject*> * getMonsters();
 	Level *getLevel();
 	SDL_Surface *getTileImage(int tile);
 	SDL_Surface *loadTileImage(int tile);

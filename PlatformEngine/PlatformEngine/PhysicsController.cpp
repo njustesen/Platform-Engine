@@ -67,13 +67,23 @@ bool PhysicsController::isDeadly(int tile, string dir){
 }
 
 bool PhysicsController::isSolid(int tile, int x, int y, string dir){
-	switch(tile){
-	case 0: return false;
-	case 6: return isSolidRightStairs(tile, x, y);
-	case 7: return isSolidLeftStairs(tile, x, y);
-	case 10: return false;
+	if (dir=="left" || dir=="right"){
+		switch(tile){
+		case 0: return false;
+		case 6: return false;
+		case 7: return false;
+		case 10: return false;
+		}
+		return true;
+	} else {
+		switch(tile){
+		case 0: return false;
+		case 6: return isSolidRightStairs(tile, x, y);
+		case 7: return isSolidLeftStairs(tile, x, y);
+		case 10: return false;
+		}
+		return true;
 	}
-	return true;
 }
 
 int PhysicsController::correctYPosition(int x, int y, int mapValue){
@@ -92,10 +102,10 @@ int PhysicsController::correctYPosition(int x, int y, int mapValue){
 	return (y / TILE_SIZE) * TILE_SIZE;
 }
 
-double PhysicsController::checkDownwards(int x, int y, double moveX, double moveY){
+double PhysicsController::checkDownwards(GameObject * object, int x, int y, double moveX, double moveY){
 	// Calculate positions
-	int realX = x + character->getX();
-	int realY = y + character->getY();
+	int realX = x + object->getX();
+	int realY = y + object->getY();
 	int newRealX = realX + int(moveX);
 	int newRealY = realY + int(moveY);
 
@@ -108,25 +118,27 @@ double PhysicsController::checkDownwards(int x, int y, double moveX, double move
 			newRealY = correctYPosition(newRealX, newRealY, mapValue);
 			// Deadly?
 			if (isDeadly(mapValue, "down")){
-				character->die();
-			} else if (character->getBounceEffect() > 0 && moveY > 1.6f){ // Bounce??
-				character->setYMovement(moveY*(-1)*character->getBounceEffect());
+				object->die();
+			} else if (object->getBounceEffect() > 0.0 && moveY > 1.6){ // Bounce??
+				object->setYMovement(moveY*(-1)*object->getBounceEffect());
+				object->setOnGround(false);
+				newRealY--;
 			} else {
-				character->setYMovement(0);
-				charOnGround = true;
+				object->setYMovement(0);
+				object->setOnGround(true);
 			}
 		} else {
-			charOnGround = false;
+			object->setOnGround(false);
 		}
 	}
 
-	return newRealY - character->getY() - y;
+	return newRealY - object->getY() - y;
 }
 
-double PhysicsController::checkUpwards(int x, int y, double moveX, double moveY){
+double PhysicsController::checkUpwards(GameObject * object, int x, int y, double moveX, double moveY){
 	// Calculate positions
-	int realX = x + character->getX();
-	int realY = y + character->getY();
+	int realX = x + object->getX();
+	int realY = y + object->getY();
 	int newRealX = realX + int(moveX);
 	int newRealY = realY + int(moveY);
 
@@ -139,24 +151,24 @@ double PhysicsController::checkUpwards(int x, int y, double moveX, double moveY)
 			newRealY = min(realY, (newRealY / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
 			// Deadly?
 			if (isDeadly(mapValue, "up")){
-				character->die();
-			} else if (character->getBounceEffect() > 0){
-				character->setYMovement(character->getYMovement()*(-1)*character->getBounceEffect());
+				object->die();
+			} else if (object->getBounceEffect() > 0){
+				object->setYMovement(object->getYMovement()*(-1)*object->getBounceEffect());
 			} else {
-				if (character->getYMovement() < 0){
-					character->setYMovement(0);
+				if (object->getYMovement() < 0){
+					object->setYMovement(0);
 				}
 			}
 		}
 	}
 
-	return newRealY - character->getY() - y;
+	return newRealY - object->getY() - y;
 }
 
-double PhysicsController::checkRight(int x, int y, double moveX, double moveY){
+double PhysicsController::checkRight(GameObject * object, int x, int y, double moveX, double moveY){
 	// Calculate positions
-	int realX = x + character->getX();
-	int realY = y + character->getY();
+	int realX = x + object->getX();
+	int realY = y + object->getY();
 	int newRealX = realX + int(moveX);
 	int newRealY = realY + int(moveY);
 
@@ -166,23 +178,24 @@ double PhysicsController::checkRight(int x, int y, double moveX, double moveY){
 		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
 		if (isSolid(mapValue, newRealX, newRealY, "right")){
 			// Bounce?
-			if (character->getBounceEffect() > 0 && moveX > 1.6f){
-				character->setXMovement(moveX*(-1)*character->getBounceEffect());
+			if (object->getBounceEffect() > 0 && moveX > 1.6){
+				object->setXMovement(moveX*(-1)*object->getBounceEffect());
+				newRealX = max(realX, ((newRealX / TILE_SIZE) * TILE_SIZE - 1));
 			} else {
 				// Correct position
 				newRealX = max(realX, ((newRealX / TILE_SIZE) * TILE_SIZE - 1));
-				character->setXMovement(0);
+				object->setXMovement(0);
 			}
 		}
 	}
 
-	return newRealX - character->getX() - x;
+	return newRealX - object->getX() - x;
 }
 
-double PhysicsController::checkLeft(int x, int y, double moveX, double moveY){
+double PhysicsController::checkLeft(GameObject * object, int x, int y, double moveX, double moveY){
 	// Calculate positions
-	int realX = x + character->getX();
-	int realY = y + character->getY();
+	int realX = x + object->getX();
+	int realY = y + object->getY();
 	int newRealX = realX + int(moveX);
 	int newRealY = realY + int(moveY);
 
@@ -192,56 +205,49 @@ double PhysicsController::checkLeft(int x, int y, double moveX, double moveY){
 		int mapValue = level->at(newRealX / TILE_SIZE, newRealY / TILE_SIZE);
 		if (isSolid(mapValue, newRealX, newRealY, "left")){
 			// Bounce?
-			if (character->getBounceEffect() > 0 && moveX > -1.6f){
-				character->setXMovement(moveX*(-1)*character->getBounceEffect());
+			if (object->getBounceEffect() > 0 && moveX < -1.6){
+				object->setXMovement(moveX*(-1)*object->getBounceEffect());
+				newRealX = min(realX, (newRealX / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
 			} else {
 				newRealX = min(realX, (newRealX / TILE_SIZE) * TILE_SIZE + TILE_SIZE);
-				character->setXMovement(0);
+				object->setXMovement(0);
 			}
 		}
 	}
 
-	return newRealX - character->getX() - x;
+	return newRealX - object->getX() - x;
 }
 
 void PhysicsController::move(){
 
-	// get object properties
-	charOnGround = false;
-	int width = character->getWidth();
-	int height = character->getHeight();
-	double moveX = character->getXMovement();
-	double moveY = character->getYMovement();
+	for(int i = 0; i < gameObjects->size(); i++){
 
-	if (character->isAlive()){
+		// get object properties
+		gameObjects->at(i)->setOnGround(false);
+		int width = gameObjects->at(i)->getWidth();
+		int height = gameObjects->at(i)->getHeight();
+		double moveX = gameObjects->at(i)->getXMovement();
+		double moveY = gameObjects->at(i)->getYMovement();
 
-		// check for vertical collision
-		moveY = checkDownwards(width / 2, 0, 0, moveY);
-		moveY = checkDownwards(-width / 2, 0, 0, moveY);
-		moveY = checkUpwards(width / 2, -height, 0, moveY);
-		moveY = checkUpwards(-width / 2, -height, 0, moveY);
+		if (gameObjects->at(i)->isAlive()){
 
-		// check for horizontal collision
-		moveX = checkRight(width / 2, -1, moveX, moveY);
-		moveX = checkRight(width / 2, -height+1, moveX, moveY);
-		moveX = checkLeft((width * (-1)) / 2, -1, moveX, moveY);
-		moveX = checkLeft((width * (-1)) / 2, -height+1, moveX, moveY);
+			// check for vertical collision
+			moveY = checkDownwards(gameObjects->at(i), width / 2, 0, 0, moveY);
+			moveY = checkDownwards(gameObjects->at(i), -width / 2, 0, 0, moveY);
+			moveY = checkUpwards(gameObjects->at(i), width / 2, -height, 0, moveY);
+			moveY = checkUpwards(gameObjects->at(i), -width / 2, -height, 0, moveY);
 
-		// Update position
-		character->setX(character->getX() + int(moveX));
-		character->setY(character->getY() + int(moveY));
+			// check for horizontal collision
+			moveX = checkRight(gameObjects->at(i), width / 2, -1, moveX, moveY);
+			moveX = checkRight(gameObjects->at(i), width / 2, -height+1, moveX, moveY);
+			moveX = checkLeft(gameObjects->at(i), (width * (-1)) / 2, -1, moveX, moveY);
+			moveX = checkLeft(gameObjects->at(i), (width * (-1)) / 2, -height+1, moveX, moveY);
 
-		// Slow down horizontal movement
-		character->setXMovement(moveX*0.85f);
-
-	} else {
-		character->setCurrentAnim(character->getDyingAnim());
+			// Update position
+			gameObjects->at(i)->setX(gameObjects->at(i)->getX() + int(moveX));
+			gameObjects->at(i)->setY(gameObjects->at(i)->getY() + int(moveY));
+		}
 	}
-	
-}
-
-bool PhysicsController::characterOnGround(){
-	return charOnGround;
 }
 
 PhysicsController::~PhysicsController(void)

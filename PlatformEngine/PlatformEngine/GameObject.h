@@ -1,12 +1,13 @@
 #include "Sprite.h"
 #include "Animation.h"
-
+#include <string>
 #pragma once
 class GameObject
 {
 protected:
 	int x;
 	int y;
+	string typeName;
 	bool alive;
 	bool onGround;
 	double xMovement;
@@ -33,6 +34,7 @@ public:
 	Animation * getRightAnim();
 	Animation * getLeftAnim();
 	Animation * getDyingAnim();
+	void resurrect();
 	void setWalkingRightAnim(Animation * animation);
 	void setWalkingLeftAnim(Animation * animation);
 	void setDyingAnim(Animation * animation);
@@ -43,6 +45,7 @@ public:
 	void setXMovement(double movement);
 	void setYMovement(double movement);
 	double getBounceEffect();
+	string getTypeName();
 	bool isAlive();
 	bool isOnGround();
 	~GameObject(void);

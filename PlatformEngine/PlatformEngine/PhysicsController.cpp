@@ -70,8 +70,8 @@ bool PhysicsController::isSolid(int tile, int x, int y, string dir){
 	if (dir=="left" || dir=="right"){
 		switch(tile){
 		case 0: return false;
-		case 6: return false;
-		case 7: return false;
+		case 6: return isSolidRightStairs(tile, x, y);
+		case 7: return isSolidLeftStairs(tile, x, y);
 		case 10: return false;
 		}
 		return true;
@@ -246,6 +246,33 @@ void PhysicsController::move(){
 			// Update position
 			gameObjects->at(i)->setX(gameObjects->at(i)->getX() + int(moveX));
 			gameObjects->at(i)->setY(gameObjects->at(i)->getY() + int(moveY));
+		}
+	}
+
+	// Check if character hits Fireball
+	checkFireballCollision();
+
+}
+
+void PhysicsController::checkFireballCollision(){
+
+	int xDistance = character->getWidth()/2 + FIREBALL_WIDTH/2;
+	int yDistance = character->getHeight()/2 + FIREBALL_HEIGHT/2;
+	int charY = character->getY() - character->getHeight()/2;
+	int charX = character->getX();
+
+	for(int i = 0; i < gameObjects->size(); i++){
+		// If fireball
+		if (gameObjects->at(i)->getTypeName() == "Fireball" && gameObjects->at(i)->isAlive()){
+			// Check collision
+			if (charX - gameObjects->at(i)->getX() < xDistance &&
+				gameObjects->at(i)->getX() - charX < xDistance){
+				
+				if (charY - (gameObjects->at(i)->getY() - FIREBALL_HEIGHT/2) < yDistance &&
+					(gameObjects->at(i)->getY() - FIREBALL_HEIGHT/2) - charY < yDistance){
+						character->die();
+				}
+			}
 		}
 	}
 }

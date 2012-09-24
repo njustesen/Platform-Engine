@@ -23,5 +23,5 @@ const extern int FIREBALL_TIME_ALIVE;
 const extern int FIREBALL_WIDTH;
 const extern int FIREBALL_HEIGHT;
 
-void monsterFire(int x, int y);
+void monsterFire(int x, int y, string direction);
 SDL_Surface *loadImage(std::string filename);

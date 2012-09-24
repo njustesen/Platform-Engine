@@ -1,7 +1,8 @@
 #include "Monster.h"
 #include "main.h"
+#include <string>
 
-Monster::Monster(int xpos, int ypos)
+Monster::Monster(int xpos, int ypos, string dir)
 {
 	x = xpos;
 	y = ypos;
@@ -18,6 +19,8 @@ Monster::Monster(int xpos, int ypos)
 	onGround = false;
 	timeSinceLastAttack = 0;
 	setupAnimations();
+	typeName = "Monster";
+	direction = dir;
 }
 
 void Monster::setupAnimations(){
@@ -56,7 +59,7 @@ void Monster::act(int ticks){
 	timeSinceLastAttack += ticks;
 	if (timeSinceLastAttack > MONSTER_RATE_OF_FIRE){
 		timeSinceLastAttack = 0;
-		monsterFire(double(x), double(y));
+		monsterFire(double(x), double(y), direction);
 	}
 }
 

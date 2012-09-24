@@ -22,6 +22,7 @@ Character::Character(int xpos, int ypos, int w, int h, double spd, double bounce
 	alive = true;
 	onGround = false;
 	setupAnimations();
+	typeName = "Character";
 }
 
 void Character::setupAnimations(){

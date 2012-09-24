@@ -70,8 +70,11 @@ void MapController::loadLevel(string levelName){
 					charX = xx;
 					charY = y;
 					level->insert(xx, y, 0);
-				} else if (line.at(x) == 'm'){
-					monsters->push_back(new Monster(xx * TILE_SIZE + TILE_SIZE/2, y * TILE_SIZE + TILE_SIZE));
+				} else if (line.at(x) == 'L'){
+					monsters->push_back(new Monster(xx * TILE_SIZE + TILE_SIZE/2, y * TILE_SIZE + TILE_SIZE, "left"));
+					level->insert(xx, y, 0);
+				} else if (line.at(x) == 'R'){
+					monsters->push_back(new Monster(xx * TILE_SIZE + TILE_SIZE/2, y * TILE_SIZE + TILE_SIZE, "right"));
 					level->insert(xx, y, 0);
 				} else if (line.at(x) != 9){ // Ignore tabs
 					level->insert(xx, y, intFromChar(line.at(x)));

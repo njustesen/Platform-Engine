@@ -22,6 +22,7 @@ private:
 	bool isSolidLeftStairs(int tile, int x, int y);
 	double getGravitationalAcceleration(int ticks);
 	int correctYPosition(int x, int y, int mapValue);
+	void checkFireballCollision();
 public:
 	void gravity(int ticks);
 	void move();

@@ -10,6 +10,12 @@ bool GameObject::isOnGround(){
 
 void GameObject::die(){
 	alive = false;
+	xMovement = 0;
+	yMovement = 0;
+}
+
+void GameObject::resurrect(){
+	alive = true;
 }
 
 void GameObject::setOnGround(bool ground){
@@ -22,6 +28,10 @@ int GameObject::getX(){
 
 int GameObject::getY(){
 	return y;
+}
+
+string GameObject::getTypeName(){
+	return typeName;
 }
 
 double GameObject::getXMovement(){

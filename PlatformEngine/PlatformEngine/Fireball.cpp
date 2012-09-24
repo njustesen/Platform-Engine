@@ -32,7 +32,7 @@ void Fireball::act(int ticks){
 		die();
 	}
 	*/
-	if ((xMovement < 0.1 && xMovement > -0.1) && (yMovement < 0.1 && yMovement > -0.1)){
+	if ((xMovement < 0.1 && xMovement > -0.1) && (yMovement < 0.1 && yMovement > -0.1) && onGround){
 		die();
 	}
 }

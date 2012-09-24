@@ -9,12 +9,14 @@ bool GameObject::isOnGround(){
 }
 
 void GameObject::die(){
+	xMovement = 0.0;
+	yMovement = 0.0;
 	alive = false;
-	xMovement = 0;
-	yMovement = 0;
 }
 
 void GameObject::resurrect(){
+	xMovement = 0.0;
+	yMovement = 0.0;
 	alive = true;
 }
 

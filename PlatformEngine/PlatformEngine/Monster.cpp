@@ -24,33 +24,7 @@ Monster::Monster(int xpos, int ypos, string dir)
 }
 
 void Monster::setupAnimations(){
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/1.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/2.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/3.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/4.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/5.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/6.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/7.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/8.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/9.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/10.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/11.png"));
-	walkingRight->addFrame(loadImage("../Assets/Anim/CharWalkRight/12.png"));
-
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/1.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/2.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/3.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/4.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/5.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/6.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/7.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/8.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/9.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/10.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/11.png"));
-	walkingLeft->addFrame(loadImage("../Assets/Anim/CharWalkLeft/12.png"));
-
-	dying->addFrame(loadImage("../Assets/Anim/Dying/1.png"));
+	walkingRight->addFrame(loadImage("../Assets/Anim/Monster/pipe.png"));
 
 	currentAnimation = walkingRight;
 }

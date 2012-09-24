@@ -20,7 +20,7 @@ const extern int SCREEN_WIDTH = 1000;
 const extern int SCREEN_HEIGHT = 600;
 const extern int SCREEN_BPP = 32;
 const extern int TILE_SIZE = 32;
-const extern int VISION = 18;
+const extern int VISION = 32;
 const extern double CHAR_SPEED = 20;
 const extern int MONSTER_WIDTH = 24;
 const extern int MONSTER_HEIGHT = 32;
@@ -30,11 +30,11 @@ const extern int LEVEL_WIDTH = 320;
 const extern int CAMERA_DELAY = 500;
 const extern int FPS = 60;
 const extern double CHARACTER_JUMP_POWER = 7.8;
-const extern int MONSTER_RATE_OF_FIRE = 2500;
+const extern int MONSTER_RATE_OF_FIRE = 3800; // HARD = 2500, MEDIUM = 3500, EASY = 4500
 const extern int FIREBALL_TIME_ALIVE = 2500;
 const extern int FIREBALL_WIDTH = 12;
 const extern int FIREBALL_HEIGHT = 12;
-const extern int SPAWN_TIME = 3000;
+const extern int SPAWN_TIME = 2600;
 
 SDL_Surface * FIREBALL_IMAGE;
 SDL_Surface * POS_DOT;
@@ -118,7 +118,7 @@ int initGame(){
 								20,
 								30, 
 								CHAR_SPEED,
-								0.2);
+								0.0);
 
 	timeSinceDeath = 0;
 
@@ -140,10 +140,9 @@ int initGame(){
 
 void monsterFire(int x, int y, string dir){
 	int xs = 3;
-	int ys = 3;
+	int ys = -3;
 	if (dir == "left"){
 		xs *= -1;
-		ys *= -1;
 	}
 	gameObjects->push_back(new Fireball(x,y-MONSTER_HEIGHT/2, xs, ys, FIREBALL_IMAGE));
 }
@@ -230,10 +229,16 @@ void drawObjects(){
 			int cameraOffsetY = camera->getY() - SCREEN_HEIGHT/2;
 
 			//Apply the character to the screen
-			applySurface( gameObjects->at(i)->getX() - gameObjects->at(i)->getWidth()/2 - cameraOffsetX, gameObjects->at(i)->getY()-gameObjects->at(i)->getHeight() - cameraOffsetY, gameObjects->at(i)->getCurrentAnim()->getCurrentFrame(), screen);
+			SDL_Surface * img = gameObjects->at(i)->getCurrentAnim()->getCurrentFrame();
+
+			applySurface( gameObjects->at(i)->getX() - img->w/2 - cameraOffsetX, gameObjects->at(i)->getY() - img->h - cameraOffsetY, img, screen);
 
 			//Position dots
 			//applySurface( gameObjects->at(i)->getX() - cameraOffsetX, gameObjects->at(i)->getY() - cameraOffsetY, POS_DOT, screen);
+			//Position dots
+			//applySurface( gameObjects->at(i)->getX() - gameObjects->at(i)->getWidth()/2 - cameraOffsetX, gameObjects->at(i)->getY() - cameraOffsetY, POS_DOT, screen);
+			//Position dots
+			//applySurface( gameObjects->at(i)->getX() + gameObjects->at(i)->getWidth()/2 - cameraOffsetX, gameObjects->at(i)->getY() - cameraOffsetY, POS_DOT, screen);
 		}
 	}
 }
